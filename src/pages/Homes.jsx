@@ -62,12 +62,18 @@ function Homes() {
           }}
         />
       </div>
-      <div className="flex justify-start items-center gap-16 px-10 py-6 z-20 relative bg-black/50 backdrop-blur-sm">
-        <div className="text-7xl font-bold text-[#860000]">Deejay 21</div>
-        <Link to="/MovieList" className="text-5xl font-bold text-white">
+      <div className="flex flex-wrap justify-between items-center px-6 py-4 z-20 relative bg-black/50 backdrop-blur-sm">
+        <div className="text-4xl md:text-7xl font-bold text-[#860000]">
+          Deejay 21
+        </div>
+        <Link
+          to="/MovieList"
+          className="text-2xl md:text-5xl font-bold text-white mt-2 md:mt-0"
+        >
           Movies
         </Link>
       </div>
+
       <div className="relative z-10">
         <Routes>
           <Route path="/MovieList" element={<MovieList />} />

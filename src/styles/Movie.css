@@ -50,3 +50,35 @@
 .category-button.active {
   background: #860000;
 }
+
+@media (max-width: 768px) {
+  .movie-seach {
+    width: 80%;
+    margin: 20px auto;
+    font-size: 16px;
+  }
+
+  .wrape-movie {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .box-movie {
+    width: 90%;
+  }
+
+  .txt-title {
+    font-size: 18px;
+    text-align: right;
+  }
+
+  .btn-detail {
+    font-size: 14px;
+    padding: 4px 24px;
+  }
+
+  .category-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
