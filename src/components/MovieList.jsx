@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getList, searchMovie, getCategory, getCategoryBy } from "../service/list.service";
+import { getList, searchMovie, getCategory } from "../service/list.service";
 import "../styles/Movie.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const MovieList = () => {
   const [listMovies, setListMovies] = useState([]);
@@ -37,52 +38,59 @@ const MovieList = () => {
         >
           All
         </button>
-        {listMovies.map((category) => (
-          <button
-            key={category.id}
-            className={`category-button ${
-              selectedCategory === category.name ? "active" : ""
-            }`}
-            onClick={() => {
-              setSelectedCategory(category.name);
-              getList().then((result) => {
-                const filteredMovies = result.filter((movie) =>
-                  movie.genre_ids.includes(category.id)
-                );
-                setListMovies(filteredMovies);
-              });
-            }}
-          >
-            {category.name}
-          </button>
-        ))}
+        {Array.isArray(categories) &&
+          categories.map((category) => (
+            <button
+              key={category.id}
+              className={`category-button ${
+                selectedCategory === category.name ? "active" : ""
+              }`}
+              onClick={() => {
+                setSelectedCategory(category.name);
+                getList().then((result) => {
+                  const filtered = result.filter((movie) =>
+                    movie.genre_ids.includes(category.id)
+                  );
+                  setListMovies(filtered);
+                });
+              }}
+            >
+              {category.name}
+            </button>
+          ))}
       </div>
     );
   };
 
   const ListMovies = () => {
-    return listMovies.map((movie, s) => {
-      return (
-        <div className="box-movie" key={s}>
-          <div className="flex justify-between p-4">
-            <img
-              className="w-34 rounded-xl"
-              src={`${"http://image.tmdb.org/t/p/w500/"}${movie.poster_path}`}
-            />
-            <div className="flex font-bold flex-col items-end">
-              <div className="txt-title text-right max-w-40">{movie.title}</div>
-              <div className="text-sm mt-[10px]">{movie.release_date}</div>
-              <button
-                onClick={() => navigate(`/detail/${movie.id}`)}
-                className="mt-[24px] text-xl btn-detail"
-              >
-                Detail
-              </button>
+    return (
+      Array.isArray(listMovies) &&
+      listMovies.map((movie, s) => {
+        return (
+          <div className="box-movie" key={s}>
+            <div className="flex justify-between p-4">
+              <img
+                className="w-34 rounded-xl"
+                src={`http://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                alt={movie.title}
+              />
+              <div className="flex font-bold flex-col items-end">
+                <div className="txt-title text-right max-w-40">
+                  {movie.title}
+                </div>
+                <div className="text-sm mt-[10px]">{movie.release_date}</div>
+                <button
+                  onClick={() => navigate(`/detail/${movie.id}`)}
+                  className="mt-[24px] text-xl btn-detail"
+                >
+                  Detail
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      );
-    });
+        );
+      })
+    );
   };
 
   const search = async (a) => {
@@ -90,23 +98,21 @@ const MovieList = () => {
       const query = await searchMovie(a);
       setListMovies(query.results);
     } else {
-      listMovies;
+      getList().then((result) => setListMovies(result));
     }
   };
 
   return (
-    <div className="text-3xl font-bold underline text-white">
-      <a className="mt-16">Your Movies is Here</a>
-      <CategorySet />
+    <div className="relative z-10 p-10 bg-black/60 backdrop-blur-sm min-h-screen">
+      <h1 className="text-4xl font-bold mb-6">Your Movies is Here</h1>
+      {CategorySet()}
       <div>
         <input
           placeholder="Search your movie ..."
-          className="movie-seach p-[20px] m-[40px]"
+          className="movie-seach p-[20px] m-[40px] text-white"
           onChange={({ target }) => search(target.value)}
         />
-        <div className="wrape-movie">
-          <ListMovies />
-        </div>
+        <div className="wrape-movie">{ListMovies()}</div>
       </div>
     </div>
   );
